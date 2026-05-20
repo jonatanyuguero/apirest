@@ -14,31 +14,46 @@ import java.net.URI;
 @RestControllerAdvice
 public class GlobalErrorController extends ResponseEntityExceptionHandler {
 
+    private ProblemDetail build(HttpStatus status, String title, String detail, String typePath) {
+        ProblemDetail pd = ProblemDetail.forStatusAndDetail(status, detail);
+        pd.setTitle(title);
+        pd.setType(URI.create("https://www.openwebinars.net/errors/" + typePath));
+        return pd;
+    }
+
     @ExceptionHandler(TaskNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ProblemDetail handleTaskNotFound(TaskNotFoundException ex){
-        ProblemDetail result = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
-        result.setTitle("Tarea no encontrada");
-        result.setType(URI.create("https://www.openwebinars.net/errors/task-not-found"));
-        return result;
+    public ProblemDetail handleTaskNotFound(TaskNotFoundException ex) {
+        return build(HttpStatus.NOT_FOUND, "Tarea no encontrada", ex.getMessage(), "task-not-found");
+    }
+
+    @ExceptionHandler(CategoryNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ProblemDetail handleCategoryNotFound(CategoryNotFoundException ex) {
+        return build(HttpStatus.NOT_FOUND, "Categoría no encontrada", ex.getMessage(), "category-not-found");
+    }
+
+    @ExceptionHandler(TagNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ProblemDetail handleTagNotFound(TagNotFoundException ex) {
+        return build(HttpStatus.NOT_FOUND, "Tag no encontrado", ex.getMessage(), "tag-not-found");
+    }
+
+    @ExceptionHandler(UserNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ProblemDetail handleUserNotFound(UserNotFoundException ex) {
+        return build(HttpStatus.NOT_FOUND, "Usuario no encontrado", ex.getMessage(), "user-not-found");
     }
 
     @ExceptionHandler(AuthenticationException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    public ProblemDetail handleAuthException(AuthenticationException ex){
-        ProblemDetail result = ProblemDetail.forStatusAndDetail(HttpStatus.UNAUTHORIZED, ex.getMessage());
-        result.setTitle("Error de autenticación");
-        result.setType(URI.create("https://www.openwebinars.net/errors/authentication"));
-        return result;
+    public ProblemDetail handleAuthException(AuthenticationException ex) {
+        return build(HttpStatus.UNAUTHORIZED, "Error de autenticación", ex.getMessage(), "authentication");
     }
 
     @ExceptionHandler(AccessDeniedException.class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
-    public ProblemDetail handleAccesDeniedException(AccessDeniedException ex){
-        ProblemDetail result = ProblemDetail.forStatusAndDetail(HttpStatus.FORBIDDEN, ex.getMessage());
-        result.setTitle("Error de autorización");
-        result.setType(URI.create("https://www.openwebinars.net/errors/authorization"));
-        return result;
+    public ProblemDetail handleAccesDeniedException(AccessDeniedException ex) {
+        return build(HttpStatus.FORBIDDEN, "Error de autorización", ex.getMessage(), "authorization");
     }
-
 }

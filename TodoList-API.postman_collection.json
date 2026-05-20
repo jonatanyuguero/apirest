@@ -1,0 +1,417 @@
+{
+	"info": {
+		"_postman_id": "a8e1f3c4-9b2d-4f6e-8c5a-1d2e3f4a5b6c",
+		"name": "TodoList API",
+		"description": "Coleccion para probar el Proyecto Final DWES - TodoList API REST.\n\nLa coleccion usa Basic Auth a nivel de coleccion con admin/admin. Cada request puede sobreescribir esa autenticacion (por ejemplo, /auth/register es publico).\n\nVariables:\n - baseUrl: http://localhost:8080\n - adminUser / adminPass: credenciales del admin (creadas por el DataSeeder).\n - userUser / userPass: usuario USER de pruebas (lo creas en el Request 1).",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"auth": {
+		"type": "basic",
+		"basic": [
+			{
+				"key": "username",
+				"value": "{{adminUser}}",
+				"type": "string"
+			},
+			{
+				"key": "password",
+				"value": "{{adminPass}}",
+				"type": "string"
+			}
+		]
+	},
+	"item": [
+		{
+			"name": "1. Registrar usuario (PUBLICO)",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"pepe\",\n    \"email\": \"pepe@test.com\",\n    \"password\": \"1234\",\n    \"fullname\": \"Pepe Garcia\"\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/auth/register",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"auth",
+						"register"
+					]
+				},
+				"description": "Endpoint publico. Crea un usuario con rol USER. No requiere autenticacion."
+			},
+			"response": []
+		},
+		{
+			"name": "2. Crear categoria (como ADMIN)",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "{{adminUser}}",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "{{adminPass}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"title\": \"Trabajo\"\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/categories",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"categories"
+					]
+				},
+				"description": "Crea una categoria. Solo accesible con rol ADMIN o GESTOR."
+			},
+			"response": []
+		},
+		{
+			"name": "3. Login como usuario (verificar credenciales)",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "{{userUser}}",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "{{userPass}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/auth/login",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"auth",
+						"login"
+					]
+				},
+				"description": "Endpoint que devuelve los datos del usuario autenticado. Sirve para verificar credenciales."
+			},
+			"response": []
+		},
+		{
+			"name": "4. Crear tag (como USER)",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "{{userUser}}",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "{{userPass}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"urgente\"\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/tags",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"tags"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "5. Crear tarea (como USER)",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "{{userUser}}",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "{{userPass}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"title\": \"Aprender Spring Boot\",\n    \"description\": \"Hacer el proyecto final\",\n    \"deadline\": \"2026-06-30T23:59:59\",\n    \"completed\": false,\n    \"priority\": \"HIGH\",\n    \"categoryId\": 1\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/tasks",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"tasks"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "6. Asignar tag a tarea",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "{{userUser}}",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "{{userPass}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/tasks/1/tags/1",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"tasks",
+						"1",
+						"tags",
+						"1"
+					]
+				},
+				"description": "Asigna el tag con id=1 a la tarea con id=1. Cambia los ids segun los que tengas."
+			},
+			"response": []
+		},
+		{
+			"name": "7. Listar mis tareas",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "{{userUser}}",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "{{userPass}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/tasks",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"tasks"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "8. Dashboard",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "{{userUser}}",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "{{userPass}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/tasks/dashboard",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"tasks",
+						"dashboard"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "9. Buscar tareas por prioridad",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "{{userUser}}",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "{{userPass}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/tasks/search/priority?value=HIGH",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"tasks",
+						"search",
+						"priority"
+					],
+					"query": [
+						{
+							"key": "value",
+							"value": "HIGH"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "10. Promocionar usuario a GESTOR (ADMIN)",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "{{adminUser}}",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "{{adminPass}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/users/2/promote",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"users",
+						"2",
+						"promote"
+					]
+				},
+				"description": "Cambia el rol del usuario con id=2 a GESTOR. Solo accesible para ADMIN. Cambia el id segun el del usuario que quieras promocionar."
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:8080",
+			"type": "string"
+		},
+		{
+			"key": "adminUser",
+			"value": "admin",
+			"type": "string"
+		},
+		{
+			"key": "adminPass",
+			"value": "admin",
+			"type": "string"
+		},
+		{
+			"key": "userUser",
+			"value": "pepe",
+			"type": "string"
+		},
+		{
+			"key": "userPass",
+			"value": "1234",
+			"type": "string"
+		}
+	]
+}

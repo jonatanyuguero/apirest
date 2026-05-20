@@ -1,9 +1,6 @@
 package com.jonatanyuguero.apirest.users;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -22,20 +19,27 @@ import java.util.List;
 @Entity
 @Table(name = "user_entity")
 public class User implements UserDetails {
-    @Id @GeneratedValue
+    @Id
+    @GeneratedValue
     private Long id;
 
+    @Column(unique = true)
     private String username;
+
+    @Column(unique = true)
     private String email;
+
     private String password;
 
+    private String fullname;
+
+    @Enumerated(EnumType.STRING)
     @Builder.Default
-    private boolean isAdmin = false;
+    private UserRole role = UserRole.USER;
 
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        String role = "ROLE_" + ((isAdmin) ? "ADMIN" : "USER");
-        return List.of(new SimpleGrantedAuthority(role));
+        return List.of(new SimpleGrantedAuthority("ROLE_" + role.name()));
     }
 }
