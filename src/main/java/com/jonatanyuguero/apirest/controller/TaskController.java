@@ -182,25 +182,27 @@ public class TaskController {
     // === Asignar / quitar tags ===
 
     @Operation(summary = "Asignar tag a una tarea",
-            description = "Asigna un tag existente a la tarea indicada. Solo el propietario.")
+            description = "Asigna un tag existente a la tarea indicada. Tanto la tarea como el tag deben pertenecer al usuario autenticado.")
     @ApiResponse(responseCode = "200", description = "Tag asignado")
     @PreAuthorize("@ownerCheck.check(#taskId, authentication.principal.getId())")
     @PostMapping("/{taskId}/tags/{tagId}")
     public GetTaskDto addTag(
             @Parameter(description = "ID de la tarea") @PathVariable Long taskId,
-            @Parameter(description = "ID del tag") @PathVariable Long tagId) {
-        return GetTaskDto.of(taskService.addTag(taskId, tagId));
+            @Parameter(description = "ID del tag") @PathVariable Long tagId,
+            @AuthenticationPrincipal User user) {
+        return GetTaskDto.of(taskService.addTag(taskId, tagId, user));
     }
 
     @Operation(summary = "Quitar tag de una tarea",
-            description = "Elimina un tag de la tarea indicada. Solo el propietario.")
+            description = "Elimina un tag de la tarea indicada. Tanto la tarea como el tag deben pertenecer al usuario autenticado.")
     @ApiResponse(responseCode = "200", description = "Tag eliminado")
     @PreAuthorize("@ownerCheck.check(#taskId, authentication.principal.getId())")
     @DeleteMapping("/{taskId}/tags/{tagId}")
     public GetTaskDto removeTag(
             @Parameter(description = "ID de la tarea") @PathVariable Long taskId,
-            @Parameter(description = "ID del tag") @PathVariable Long tagId) {
-        return GetTaskDto.of(taskService.removeTag(taskId, tagId));
+            @Parameter(description = "ID del tag") @PathVariable Long tagId,
+            @AuthenticationPrincipal User user) {
+        return GetTaskDto.of(taskService.removeTag(taskId, tagId, user));
     }
 
     // === Dashboard ===

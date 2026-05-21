@@ -129,18 +129,18 @@ public class TaskService {
         return taskRepository.findByAuthorAndTagsIn(author, tags);
     }
 
-    // === Asignar / quitar tags ===
-    public Task addTag(Long taskId, Long tagId) {
+    // === Asignar / quitar tags (verifica que el tag pertenece al usuario) ===
+    public Task addTag(Long taskId, Long tagId, User author) {
         Task t = findbyId(taskId);
-        Tag tag = tagRepository.findById(tagId)
+        Tag tag = tagRepository.findByIdAndAuthor(tagId, author)
                 .orElseThrow(() -> new TagNotFoundException(tagId));
         if (!t.getTags().contains(tag)) t.getTags().add(tag);
         return taskRepository.save(t);
     }
 
-    public Task removeTag(Long taskId, Long tagId) {
+    public Task removeTag(Long taskId, Long tagId, User author) {
         Task t = findbyId(taskId);
-        Tag tag = tagRepository.findById(tagId)
+        Tag tag = tagRepository.findByIdAndAuthor(tagId, author)
                 .orElseThrow(() -> new TagNotFoundException(tagId));
         t.getTags().remove(tag);
         return taskRepository.save(t);

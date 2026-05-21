@@ -1,36 +1,15 @@
 package com.jonatanyuguero.apirest.config;
 
-import com.jonatanyuguero.apirest.users.User;
-import com.jonatanyuguero.apirest.users.UserRepository;
-import com.jonatanyuguero.apirest.users.UserRole;
-import lombok.RequiredArgsConstructor;
-import org.springframework.boot.CommandLineRunner;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Component;
-
 /**
- * Inserta un usuario ADMIN por defecto al arrancar la aplicación,
- * para poder probar los endpoints protegidos por rol.
- *  username: admin
- *  password: admin
+ * DataSeeder deshabilitado.
+ *
+ * Los datos iniciales (usuarios admin/gestor/pepe/ana, categorías, tags y tareas)
+ * se cargan desde src/main/resources/import.sql, que Hibernate ejecuta automáticamente
+ * tras crear el esquema cuando ddl-auto está en 'create' o 'create-drop', y manualmente
+ * (mediante spring.jpa.defer-datasource-initialization=true junto a sql.init) en otros casos.
+ *
+ * La anotación @Component se ha retirado para que Spring no instancie esta clase
+ * ni ejecute ningún CommandLineRunner. Se conserva el archivo como referencia.
  */
-@Component
-@RequiredArgsConstructor
-public class DataSeeder implements CommandLineRunner {
-
-    private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
-
-    @Override
-    public void run(String... args) {
-        if (userRepository.findFirstByUsername("admin").isEmpty()) {
-            userRepository.save(User.builder()
-                    .username("admin")
-                    .email("admin@apirest.local")
-                    .fullname("Administrador")
-                    .password(passwordEncoder.encode("admin"))
-                    .role(UserRole.ADMIN)
-                    .build());
-        }
-    }
+public class DataSeeder {
 }

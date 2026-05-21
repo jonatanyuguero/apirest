@@ -1,5 +1,6 @@
 package com.jonatanyuguero.apirest.users;
 
+/** DTO de respuesta para User. Evita exponer la contraseña hasheada y campos internos de la entidad JPA en las respuestas de la API. */
 public record NewUserResponse(
         Long id,
         String username,

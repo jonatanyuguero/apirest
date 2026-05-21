@@ -1,11 +1,12 @@
 package com.jonatanyuguero.apirest.model;
 
+import com.jonatanyuguero.apirest.users.User;
 import jakarta.persistence.*;
 import lombok.*;
 
 @Getter
 @Setter
-@ToString
+@ToString(exclude = "author")
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -14,9 +15,12 @@ import lombok.*;
 public class Tag {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true)
     private String name;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "author_id")
+    private User author;
 }

@@ -7,6 +7,7 @@ import com.jonatanyuguero.apirest.users.NewUserResponse;
 import java.time.LocalDateTime;
 import java.util.List;
 
+/** DTO de respuesta para Task. Evita exponer la entidad JPA directamente (proxies Lazy, relaciones circulares) y controla exactamente qué campos recibe el cliente, incluyendo author como NewUserResponse en lugar de User. */
 public record GetTaskDto(
         Long id,
         String title,
