@@ -1,4 +1,4 @@
-const API_URL = "";
+const API_URL = "https://apirest-production-1d70.up.railway.app";;
 let authHeader = null;
 let usuarioActual = null;
 let tagsDisponiblesLista = [];
