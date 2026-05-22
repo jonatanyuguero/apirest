@@ -1,0 +1,17 @@
+# No copiar al build context: ahorra tiempo y reduce tamaño de la imagen
+target/
+.idea/
+*.iml
+.git/
+.gitignore
+.mvn/wrapper/maven-wrapper.jar
+
+# Cliente front (se sirve aparte, no se mete en el JAR)
+cliente-todo/
+
+# Documentación y archivos temporales
+*.md
+*.docx
+*.pdf
+HELP.md
+README.md

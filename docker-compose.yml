@@ -1,0 +1,50 @@
+# =============================================================================
+# Docker Compose: aplicación Spring Boot + MySQL 8
+# =============================================================================
+# Levanta dos contenedores conectados por una red interna de Docker:
+#   - db  : MySQL 8 con volumen persistente
+#   - app : la API REST que conecta a "db" por nombre de servicio
+
+services:
+  db:
+    image: mysql:8.0
+    container_name: todolist-db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: todolist
+    ports:
+      # 3307 en el host para no chocar con el MySQL de XAMPP (3306)
+      - "3307:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    command: >
+      --character-set-server=utf8mb4
+      --collation-server=utf8mb4_unicode_ci
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-prootpass"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  app:
+    build: .
+    image: todolist-api:latest
+    container_name: todolist-app
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "8080:8080"
+    environment:
+      # Spring Boot lee estas variables automáticamente (relaxed binding)
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/todolist?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true&useUnicode=true&characterEncoding=UTF-8
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: rootpass
+      # En contenedor: update (no destruir datos). En local podemos seguir con lo de application.properties.
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+
+volumes:
+  mysql-data:
