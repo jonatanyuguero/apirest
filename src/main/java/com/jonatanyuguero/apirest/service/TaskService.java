@@ -31,17 +31,13 @@ public class TaskService {
     private final CategoryRepository categoryRepository;
     private final TagRepository tagRepository;
 
-    // === Operaciones básicas ===
+    // === Operaciones basicas ===
     public List<Task> findAll() {
-        List<Task> result = taskRepository.findAll();
-        if (result.isEmpty()) throw new TaskNotFoundException();
-        return result;
+        return taskRepository.findAll();
     }
 
     public List<Task> findByAuthor(User author) {
-        List<Task> result = taskRepository.findByAuthor(author);
-        if (result.isEmpty()) throw new TaskNotFoundException();
-        return result;
+        return taskRepository.findByAuthor(author);
     }
 
     public Task findbyId(Long id) {
@@ -91,7 +87,7 @@ public class TaskService {
         taskRepository.deleteById(id);
     }
 
-    // === Búsquedas por cada campo ===
+    // === Busquedas por cada campo ===
     public List<Task> searchByTitle(User author, String title) {
         return taskRepository.findByAuthorAndTitleContainingIgnoreCase(author, title);
     }
@@ -144,6 +140,41 @@ public class TaskService {
                 .orElseThrow(() -> new TagNotFoundException(tagId));
         t.getTags().remove(tag);
         return taskRepository.save(t);
+    }
+
+    // === Supervision global (GESTOR/ADMIN) ===
+    public List<Task> findAllGlobal() {
+        return taskRepository.findAll();
+    }
+
+    public DashboardDto dashboardGlobal() {
+        List<Task> all = taskRepository.findAll();
+
+        long total = all.size();
+        long completed = all.stream().filter(Task::isCompleted).count();
+        long pending = total - completed;
+        long overdue = all.stream()
+                .filter(t -> !t.isCompleted()
+                        && t.getDeadline() != null
+                        && t.getDeadline().isBefore(LocalDateTime.now()))
+                .count();
+
+        Map<String, Long> byCategory = all.stream()
+                .filter(t -> t.getCategory() != null)
+                .collect(Collectors.groupingBy(t -> t.getCategory().getTitle(), Collectors.counting()));
+
+        Map<String, Long> byTag = new HashMap<>();
+        for (Task t : all) {
+            for (Tag tag : t.getTags()) {
+                byTag.merge(tag.getName(), 1L, Long::sum);
+            }
+        }
+
+        Map<String, Long> byPriority = all.stream()
+                .filter(t -> t.getPriority() != null)
+                .collect(Collectors.groupingBy(t -> t.getPriority().name(), Collectors.counting()));
+
+        return new DashboardDto(total, completed, pending, overdue, byCategory, byTag, byPriority);
     }
 
     // === Dashboard ===

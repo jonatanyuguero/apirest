@@ -1,164 +1,191 @@
-/* === Variables y Configuración de Contraste (WCAG) === */
-:root {
-    --primary: #4f46e5;
-    --primary-hover: #4338ca;
-    --success: #10b981;
-    --success-hover: #059669;
-    --danger: #ef4444;
-    --danger-hover: #dc2626;
-    --bg-color: #f3f4f6;
-    --card-bg: #ffffff;
-    --text-main: #111827;
-    --text-muted: #4b5563;
-    --border-color: #d1d5db;
-}
-
-* { box-sizing: border-box; margin: 0; padding: 0; }
-
-body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    background-color: var(--bg-color);
-    color: var(--text-main);
-    line-height: 1.5;
-}
-
-/* === Layout de Vistas === */
-.view-container { display: none !important; min-height: 100vh; }
+/* === Control de Vistas === */
+.view-container { display: none !important; }
 .active-view { display: block !important; }
-#login-view.active-view { display: flex !important; align-items: center; justify-content: center; }
+#login-view.active-view { display: flex !important; } /* Mantener centrado el login */
 
-.login-card {
-    background: var(--card-bg);
-    padding: 2.5rem;
-    border-radius: 12px;
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-    width: 100%;
-    max-width: 400px;
+/* === MODO OSCURO: ajustes para elementos personalizados ===
+   Bootstrap 5.3 aplica data-bs-theme="dark" a sus componentes,
+   pero nuestros estilos custom necesitan adaptarse a mano. */
+
+[data-bs-theme="dark"] body.bg-dark { background-color: #1a1d21 !important; }
+
+[data-bs-theme="dark"] .card,
+[data-bs-theme="dark"] header.bg-white {
+    background-color: #2b2f36 !important;
+    color: #e9ecef;
+    border-color: #3a3f47 !important;
 }
-.login-card h1 { font-size: 1.5rem; margin-bottom: 0.5rem; }
-.login-card p { color: var(--text-muted); margin-bottom: 1.5rem; }
+[data-bs-theme="dark"] .text-muted { color: #adb5bd !important; }
+[data-bs-theme="dark"] .text-dark { color: #e9ecef !important; }
+[data-bs-theme="dark"] .bg-light { background-color: #2b2f36 !important; }
 
-/* === Layout de la SPA === */
-.app-header {
-    background: var(--card-bg);
-    padding: 1.5rem 2rem;
+/* Stats: mantener los colores pero oscurecer los fondos */
+[data-bs-theme="dark"] .stat-box {
+    background: #343a40;
+    border-color: #495057;
+}
+[data-bs-theme="dark"] .stat-label { color: #adb5bd; }
+[data-bs-theme="dark"] .stat-number { color: #f8f9fa; }
+[data-bs-theme="dark"] .stat-total      { background: #2e2a5a; border-color: #4338ca; }
+[data-bs-theme="dark"] .stat-completed  { background: #1e3a2f; border-color: #047857; }
+[data-bs-theme="dark"] .stat-pending    { background: #3a2e1a; border-color: #b45309; }
+[data-bs-theme="dark"] .stat-overdue    { background: #3a1f1f; border-color: #b91c1c; }
+[data-bs-theme="dark"] .stat-total .stat-number     { color: #c7d2fe; }
+[data-bs-theme="dark"] .stat-completed .stat-number { color: #6ee7b7; }
+[data-bs-theme="dark"] .stat-pending .stat-number   { color: #fcd34d; }
+[data-bs-theme="dark"] .stat-overdue .stat-number   { color: #fca5a5; }
+
+/* Tareas en oscuro */
+[data-bs-theme="dark"] .task-item {
+    background: #2b2f36;
+    border-color: #3a3f47;
+    color: #e9ecef;
+}
+[data-bs-theme="dark"] .task-item.completed { background: #21252a; }
+[data-bs-theme="dark"] .task-desc { color: #adb5bd; }
+
+/* Badges custom: oscurecer fondos manteniendo legibilidad */
+[data-bs-theme="dark"] .badge.HIGH   { background: #4a1d1d; color: #fca5a5; }
+[data-bs-theme="dark"] .badge.MEDIUM { background: #4a371a; color: #fcd34d; }
+[data-bs-theme="dark"] .badge.LOW    { background: #1a4a36; color: #6ee7b7; }
+[data-bs-theme="dark"] .badge-cat    { background: #343a40; color: #dee2e6; border-color: #495057; }
+[data-bs-theme="dark"] .badge-tag    { background: #2e2a5a; color: #c7d2fe; }
+
+
+/* === Validaciones visuales extras === */
+.input-error { border-color: #dc3545 !important; background-color: #f8d7da !important; }
+
+/* === Tarjetas estadísticas del Resumen === */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.6rem;
+}
+.stat-box {
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
     align-items: center;
-    border-bottom: 1px solid var(--border-color);
+    justify-content: center;
+    padding: 0.85rem 0.5rem;
+    border-radius: 10px;
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
-.app-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 2rem;
-    padding: 2rem;
-    max-width: 1400px;
-    margin: 0 auto;
+.stat-box:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.08);
 }
-
-@media (min-width: 992px) {
-    .app-grid { grid-template-columns: 320px 1fr; }
-}
-
-/* === Formularios y Controles === */
-.form-grid, .search-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 1rem;
-}
-@media (min-width: 768px) {
-    .form-grid, .search-grid { grid-template-columns: 1fr 1fr; }
-    .full-width { grid-column: span 2; }
-}
-
-.form-group { display: flex; flex-direction: column; margin-bottom: 0.5rem; }
-.form-group label { font-weight: 600; margin-bottom: 0.35rem; font-size: 0.9rem; }
-.required { color: var(--danger); }
-
-.form-group-inline {
-    display: flex;
-    gap: 0.5rem;
-}
-.form-group-inline input { flex: 1; }
-
-input, select, textarea {
-    padding: 0.65rem 0.75rem;
-    border: 1px solid var(--border-color);
-    border-radius: 6px;
-    font-size: 0.95rem;
-    font-family: inherit;
-    color: var(--text-main);
-}
-input:focus, select:focus, textarea:focus {
-    outline: none;
-    border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
-}
-
-/* Manejo de errores visuales */
-.error-msg { color: var(--danger); font-size: 0.8rem; margin-top: 0.25rem; display: none; }
-.input-error { border-color: var(--danger) !important; background-color: #fef2f2; }
-
-/* === Botones === */
-.btn {
-    padding: 0.65rem 1.25rem;
-    border: none;
-    border-radius: 6px;
+.stat-label {
+    font-size: 0.7rem;
     font-weight: 600;
-    cursor: pointer;
-    transition: background-color 0.15s;
-    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #6c757d;
+    margin-bottom: 0.25rem;
 }
-.btn-primary { background: var(--primary); color: white; }
-.btn-primary:hover { background: var(--primary-hover); }
-.btn-success { background: var(--success); color: white; }
-.btn-success:hover { background: var(--success-hover); }
-.btn-danger { background: var(--danger); color: white; }
-.btn-danger:hover { background: var(--danger-hover); }
-.btn-secondary { background: #e5e7eb; color: var(--text-main); }
-.btn-secondary:hover { background: #d1d5db; }
-.w-100 { width: 100%; }
-.mt-2 { margin-top: 0.5rem; }
-.mt-4 { margin-top: 1.5rem; }
-.mb-2 { margin-bottom: 0.5rem; }
-
-/* === Componentes Elemento Lista === */
-.form-section, .tasks-section, .dashboard-widget {
-    background: var(--card-bg);
-    padding: 1.5rem;
-    border-radius: 8px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+.stat-number {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #212529;
+    line-height: 1;
 }
-.tasks-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 0.75rem; margin-bottom: 1rem;}
+.stat-total      { background: #eef2ff; border-color: #c7d2fe; }
+.stat-total .stat-number { color: #4338ca; }
+.stat-completed  { background: #ecfdf5; border-color: #a7f3d0; }
+.stat-completed .stat-number { color: #047857; }
+.stat-pending    { background: #fffbeb; border-color: #fde68a; }
+.stat-pending .stat-number { color: #b45309; }
+.stat-overdue    { background: #fef2f2; border-color: #fecaca; }
+.stat-overdue .stat-number { color: #b91c1c; }
 
-.tags-flex { display: flex; flex-wrap: wrap; gap: 0.35rem; }
-.badge { padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.75rem; font-weight: 700; background: #e5e7eb; }
-.badge.HIGH { background: #fee2e2; color: #991b1b; }
-.badge.MEDIUM { background: #fef3c7; color: #92400e; }
-.badge.LOW { background: #d1fae5; color: #065f46; }
+/* === Panel de Administración y Gestor === */
+#admin-panel .table thead th,
+#gestor-panel .table thead th {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+}
+.role-badge {
+    padding: 0.25rem 0.65rem;
+    border-radius: 12px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+}
+.role-ADMIN  { background: #fee2e2; color: #991b1b; }
+.role-GESTOR { background: #fef3c7; color: #92400e; }
+.role-USER   { background: #dbeafe; color: #1e40af; }
 
-.task-list { list-style: none; display: grid; gap: 0.75rem; }
+/* En el panel gestor las stats tienen más espacio: 4 cols en tablet+ */
+@media (min-width: 768px) {
+    #gestor-panel .stats-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+/* === Ajustes responsive para móvil pequeño === */
+@media (max-width: 480px) {
+    .stat-number { font-size: 1.3rem; }
+    .stat-label { font-size: 0.65rem; }
+    .task-item { padding: 0.75rem; }
+    .task-title { font-size: 1rem; }
+    .task-actions { width: 100%; justify-content: flex-end; }
+    .toast-custom { font-size: 0.9rem; padding: 0.75rem; }
+}
+
+/* === Ajustes en login para no comerse el viewport === */
+@media (max-width: 360px) {
+    #login-view section.card { padding: 1.25rem !important; }
+}
+
+/* === Estilos para los items inyectados por JavaScript === */
 .task-item {
-    border: 1px solid var(--border-color);
+    border: 1px solid #dee2e6;
     border-radius: 8px;
     padding: 1rem;
+    margin-bottom: 0.75rem;
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    background: #f9fafb;
+    background: #ffffff;
+    flex-wrap: wrap; /* Importante para móvil: permite que los botones bajen si no caben */
+    gap: 1rem;
 }
-.task-item.completed { opacity: 0.65; background: #e5e7eb; }
+.task-item.completed { opacity: 0.65; background: #f8f9fa; }
 .task-item.completed .task-title { text-decoration: line-through; }
-.task-content { flex: 1; }
-.task-title { font-size: 1.05rem; font-weight: bold; margin-bottom: 0.25rem; }
-.task-desc { font-size: 0.9rem; color: #4b5563; margin-bottom: 0.5rem; }
+.task-content { flex: 1; min-width: 200px; }
+.task-title { font-size: 1.1rem; font-weight: bold; margin-bottom: 0.25rem; }
+.task-desc { font-size: 0.9rem; color: #6c757d; margin-bottom: 0.5rem; }
 .task-meta { display: flex; flex-wrap: wrap; gap: 0.5rem; }
-.task-actions { display: flex; gap: 0.35rem; }
+.task-actions { display: flex; gap: 0.5rem; }
 
-/* === Toasts (Notificaciones flotantes) === */
-.toast-container { position: fixed; bottom: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; }
-.toast { background: #1f2937; color: white; padding: 0.75rem 1.25rem; border-radius: 6px; box-shadow: 0 4px 6px rgba(0,0,0,0.15); animation: slideIn 0.2s ease-out; font-size: 0.9rem; }
-.toast.error { background: var(--danger); }
-.toast.success { background: var(--success); }
+/* === Badges (Prioridades y Tags) === */
+.badge-custom {
+    padding: 0.25rem 0.6rem;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 700;
+}
+.badge.HIGH { background: #fee2e2; color: #991b1b; }
+.badge.MEDIUM { background: #fef3c7; color: #92400e; }
+.badge.LOW { background: #d1fae5; color: #065f46; }
+.badge-tag { background: #e0e7ff; color: #4338ca; }
+.badge-cat { background: #f3f4f6; color: #374151; border: 1px solid #d1d5db; }
 
-@keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+/* === Toasts (Notificaciones) === */
+.toast-custom {
+    background: #343a40; color: white; padding: 1rem;
+    border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    animation: slideIn 0.3s ease-out; margin-top: 0.5rem; font-weight: 500;
+}
+.toast-custom.error { background: #dc3545; }
+.toast-custom.success { background: #198754; }
+
+@keyframes slideIn {
+    from { transform: translateX(100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}

@@ -4,189 +4,350 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestor de Tareas Profesional</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
 </head>
-<body>
+<body class="bg-light text-dark">
 
-<div id="toast-container" class="toast-container" aria-live="polite"></div>
+<div id="toast-container" class="toast-container position-fixed bottom-0 end-0 p-3" aria-live="polite" style="z-index: 9999;"></div>
 
-<main id="login-view" class="view-container active-view">
-    <section class="login-card">
-        <h1 id="auth-title">Iniciar Sesión</h1>
-        <p id="auth-subtitle">Accede a tu panel de tareas</p>
+<div class="modal fade" id="modalPerfil" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" style="background-color: var(--bs-body-bg);">
+            <div class="modal-header border-bottom-0">
+                <h5 class="modal-title fw-bold text-primary">Mi Perfil</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="form-perfil">
+                    <div class="mb-3">
+                        <label for="perfil-email" class="form-label fw-bold">Correo Electrónico</label>
+                        <input type="email" id="perfil-email" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="perfil-fullname" class="form-label fw-bold">Nombre Completo</label>
+                        <input type="text" id="perfil-fullname" class="form-control" required>
+                    </div>
+                    <div class="mb-4">
+                        <label for="perfil-password" class="form-label fw-bold">Nueva Contraseña <span class="text-muted small fw-normal">(Opcional)</span></label>
+                        <input type="password" id="perfil-password" class="form-control" placeholder="Dejar en blanco para mantener la actual">
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100 fw-bold">Actualizar Datos</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<main id="login-view" class="view-container active-view d-flex align-items-center justify-content-center min-vh-100">
+    <section class="card shadow-sm p-4 w-100" style="max-width: 400px;">
+        <h1 id="auth-title" class="h3 mb-1">Iniciar Sesión</h1>
+        <p id="auth-subtitle" class="text-muted mb-4">Accede a tu panel de tareas</p>
 
         <form id="form-login" novalidate>
-            <div class="form-group">
-                <label for="login-username">Usuario</label>
-                <input type="text" id="login-username" required aria-required="true" placeholder="Ej: pepe">
+            <div class="mb-3">
+                <label for="login-username" class="form-label fw-bold">Usuario</label>
+                <input type="text" id="login-username" class="form-control" required placeholder="Ej: pepe">
             </div>
-            <div class="form-group">
-                <label for="login-password">Contraseña</label>
-                <input type="password" id="login-password" required aria-required="true" placeholder="Tu contraseña">
+            <div class="mb-4">
+                <label for="login-password" class="form-label fw-bold">Contraseña</label>
+                <input type="password" id="login-password" class="form-control" required placeholder="Tu contraseña">
             </div>
-            <button type="submit" class="btn btn-primary w-100">Entrar</button>
-            <p class="text-center mt-4 text-small">
-                ¿No tienes cuenta? <a href="#" id="link-to-register" class="auth-link">Regístrate aquí</a>
+            <button type="submit" class="btn btn-primary w-100 fw-bold">Entrar</button>
+            <p class="text-center mt-3 small mb-1">
+                ¿No tienes cuenta? <a href="#" id="link-to-register" class="text-decoration-none">Regístrate aquí</a>
             </p>
         </form>
 
         <form id="form-register" novalidate style="display: none;">
-            <div class="form-group">
-                <label for="reg-username">Nombre de Usuario</label>
-                <input type="text" id="reg-username" required aria-required="true" placeholder="Ej: jonatan">
+            <div class="mb-3">
+                <label for="reg-username" class="form-label fw-bold">Nombre de Usuario</label>
+                <input type="text" id="reg-username" class="form-control" required placeholder="Ej: jonatan">
             </div>
-            <div class="form-group">
-                <label for="reg-email">Correo Electrónico</label>
-                <input type="email" id="reg-email" required aria-required="true" placeholder="ejemplo@correo.com">
+            <div class="mb-3">
+                <label for="reg-email" class="form-label fw-bold">Correo Electrónico</label>
+                <input type="email" id="reg-email" class="form-control" required placeholder="ejemplo@correo.com">
             </div>
-            <div class="form-group">
-                <label for="reg-fullname">Nombre y Apellidos</label>
-                <input type="text" id="reg-fullname" required aria-required="true" placeholder="Jonatan Yuguero">
+            <div class="mb-3">
+                <label for="reg-fullname" class="form-label fw-bold">Nombre y Apellidos</label>
+                <input type="text" id="reg-fullname" class="form-control" required placeholder="Jonatan Yuguero">
             </div>
-            <div class="form-group">
-                <label for="reg-password">Contraseña</label>
-                <input type="password" id="reg-password" required aria-required="true" placeholder="Mínimo 5 caracteres">
+            <div class="mb-4">
+                <label for="reg-password" class="form-label fw-bold">Contraseña</label>
+                <input type="password" id="reg-password" class="form-control" required placeholder="Mínimo 5 caracteres">
             </div>
-            <button type="submit" class="btn btn-success w-100">Crear Cuenta</button>
-            <p class="text-center mt-4 text-small">
-                ¿Ya tienes cuenta? <a href="#" id="link-to-login" class="auth-link">Inicia sesión</a>
+            <button type="submit" class="btn btn-success w-100 fw-bold">Crear Cuenta</button>
+            <p class="text-center mt-3 small">
+                ¿Ya tienes cuenta? <a href="#" id="link-to-login" class="text-decoration-none">Inicia sesión</a>
             </p>
         </form>
     </section>
 </main>
 
 <div id="app-view" class="view-container">
-    <header class="app-header">
-        <div>
-            <h2>Mi Panel de Tareas</h2>
-            <p id="user-greeting">Bienvenido</p>
+    <header class="bg-white border-bottom py-3 px-3 px-md-4 mb-4 d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3 shadow-sm">
+        <div class="w-100 w-md-auto">
+            <h2 class="h4 mb-0 text-primary">Mi Panel de Tareas</h2>
+            <p id="user-greeting" class="text-muted mb-0 small">Bienvenido</p>
         </div>
-        <button id="btn-logout" class="btn btn-danger">Cerrar Sesión</button>
+        <div class="d-flex flex-wrap gap-2 w-100 w-md-auto justify-content-start justify-content-md-end">
+            <button id="btn-perfil" class="btn btn-outline-primary btn-sm fw-bold">Mi Perfil</button>
+            <button id="btn-gestor" class="btn btn-info btn-sm fw-bold" style="display: none;">Panel Gestor</button>
+            <button id="btn-admin" class="btn btn-warning btn-sm fw-bold" style="display: none;">Panel Admin</button>
+            <button id="btn-volver-tareas" class="btn btn-primary btn-sm fw-bold" style="display: none;">Volver a Tareas</button>
+            <button id="btn-theme-toggle" type="button" class="btn btn-outline-secondary btn-sm fw-bold" aria-label="Cambiar tema claro/oscuro">Modo oscuro</button>
+            <button id="btn-logout" class="btn btn-outline-danger btn-sm fw-bold">Cerrar Sesión</button>
+        </div>
     </header>
 
-    <div class="app-grid">
-        <aside class="sidebar">
-            <section class="dashboard-widget">
-                <h3>Resumen</h3>
-                <ul class="stats-list" aria-label="Estadísticas de tareas">
-                    <li>Totales: <span id="stat-total">0</span></li>
-                    <li>Completadas: <span id="stat-completed">0</span></li>
-                    <li>Pendientes: <span id="stat-pending">0</span></li>
-                    <li class="text-danger">Vencidas: <span id="stat-overdue">0</span></li>
-                </ul>
-            </section>
+    <div id="admin-panel" class="container-fluid px-4 pb-5" style="max-width: 1400px; display: none;">
+        <section class="card shadow-sm mb-4 border-warning">
+            <div class="card-body">
+                <h3 class="h4 border-bottom pb-2 mb-3 text-warning">Panel de Administración</h3>
+                <p class="text-muted small">Gestiona los usuarios del sistema: cambia roles o elimina cuentas.</p>
 
-            <section class="dashboard-widget mt-4">
-                <h3>Añadir Categoría</h3>
-                <form id="form-nueva-categoria" novalidate>
-                    <div class="form-group-inline">
-                        <input type="text" id="nueva-cat-titulo" placeholder="Nueva categoría..." required>
-                        <button type="submit" class="btn btn-primary">+</button>
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover align-middle" aria-label="Listado de usuarios">
+                        <thead class="table-dark">
+                        <tr>
+                            <th scope="col">ID</th>
+                            <th scope="col">Usuario</th>
+                            <th scope="col">Nombre Completo</th>
+                            <th scope="col">Email</th>
+                            <th scope="col">Rol</th>
+                            <th scope="col" class="text-end">Acciones</th>
+                        </tr>
+                        </thead>
+                        <tbody id="tabla-usuarios"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div id="gestor-panel" class="container-fluid px-4 pb-5" style="max-width: 1400px; display: none;">
+        <section class="card shadow-sm mb-4 border-success">
+            <div class="card-body">
+                <h3 class="h4 border-bottom pb-2 mb-3 text-success">Gestión de Categorías</h3>
+                <p class="text-muted small">Crea, edita o elimina las categorías disponibles para todos los usuarios.</p>
+
+                <form id="form-cat-gestor" class="row g-2 align-items-end mb-4" novalidate>
+                    <input type="hidden" id="cat-gestor-id">
+                    <div class="col-12 col-md-8">
+                        <label for="cat-gestor-titulo" class="form-label fw-bold small">Nombre de la categoría</label>
+                        <input type="text" id="cat-gestor-titulo" class="form-control form-control-sm" placeholder="Ej: Finanzas" required>
+                    </div>
+                    <div class="col-12 col-md-4 d-flex gap-2">
+                        <button type="submit" id="btn-cat-gestor-guardar" class="btn btn-success btn-sm fw-bold w-100">Guardar</button>
+                        <button type="button" id="btn-cat-gestor-cancelar" class="btn btn-outline-secondary btn-sm fw-bold w-100" style="display:none;">Cancelar</button>
                     </div>
                 </form>
-            </section>
 
-            <section class="dashboard-widget mt-4">
-                <h3>Mis Tags</h3>
-                <form id="form-nuevo-tag" novalidate class="mb-2">
-                    <div class="form-group-inline">
-                        <input type="text" id="nuevo-tag-nombre" placeholder="Nuevo tag (sin #)..." required>
-                        <button type="submit" class="btn btn-success">+</button>
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover align-middle" aria-label="Listado de categorías">
+                        <thead class="table-dark">
+                        <tr>
+                            <th scope="col">ID</th>
+                            <th scope="col">Nombre</th>
+                            <th scope="col" class="text-end">Acciones</th>
+                        </tr>
+                        </thead>
+                        <tbody id="tabla-categorias-gestor"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <section class="card shadow-sm mb-4 border-info">
+            <div class="card-body">
+                <h3 class="h4 border-bottom pb-2 mb-3 text-info">Panel de Supervisión</h3>
+                <p class="text-muted small">Vista global de las tareas del sistema. Solo lectura.</p>
+
+                <h4 class="h6 mt-3">Estadísticas globales</h4>
+                <div class="stats-grid mb-4" aria-label="Estadísticas globales">
+                    <div class="stat-box stat-total">
+                        <span class="stat-label">Totales</span>
+                        <span id="gstat-total" class="stat-number">0</span>
                     </div>
-                </form>
-                <div id="tags-container" class="tags-flex"></div>
-            </section>
-        </aside>
-
-        <main class="main-content">
-            <section class="form-section">
-                <h3>Crear Nueva Tarea</h3>
-                <form id="form-tarea" novalidate>
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label for="titulo">Título de la tarea <span class="required">*</span></label>
-                            <input type="text" id="titulo" required placeholder="¿Qué hay que hacer?">
-                            <span class="error-msg" id="error-titulo">El título es obligatorio.</span>
-                        </div>
-                        <div class="form-group">
-                            <label for="fecha-limite">Fecha y Hora límite</label>
-                            <input type="datetime-local" id="fecha-limite">
-                        </div>
-                        <div class="form-group full-width">
-                            <label for="descripcion">Descripción</label>
-                            <textarea id="descripcion" rows="2" placeholder="Añade detalles del proyecto..."></textarea>
-                        </div>
-                        <div class="form-group">
-                            <label for="prioridad">Prioridad</label>
-                            <select id="prioridad">
-                                <option value="LOW">Baja</option>
-                                <option value="MEDIUM" selected>Media</option>
-                                <option value="HIGH">Alta</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="categoria">Categoría</label>
-                            <select id="categoria">
-                                <option value="">Sin categoría</option>
-                            </select>
-                        </div>
+                    <div class="stat-box stat-completed">
+                        <span class="stat-label">Completadas</span>
+                        <span id="gstat-completed" class="stat-number">0</span>
                     </div>
-                    <div class="form-actions mt-2">
-                        <button type="submit" class="btn btn-success" id="btn-crear">Guardar Tarea</button>
+                    <div class="stat-box stat-pending">
+                        <span class="stat-label">Pendientes</span>
+                        <span id="gstat-pending" class="stat-number">0</span>
                     </div>
-                </form>
-            </section>
-
-            <section class="form-section mt-4 search-section">
-                <h3>Buscador Inteligente</h3>
-                <div class="search-grid">
-                    <div class="form-group">
-                        <label for="search-type">Filtrar por campo</label>
-                        <select id="search-type">
-                            <option value="all">Ver todas las tareas</option>
-                            <option value="title">Título contiene...</option>
-                            <option value="description">Descripción contiene...</option>
-                            <option value="priority">Prioridad exacta</option>
-                            <option value="category">Categoría específica</option>
-                            <option value="completed">Estado (Completado/Pendiente)</option>
-                            <option value="overdue">Vencidas e Incompletas</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group" id="search-input-container">
-                        <label id="search-param-label" for="search-query">Criterio de búsqueda</label>
-                        <input type="text" id="search-query" placeholder="Escribe para buscar...">
-
-                        <select id="search-priority" style="display: none;">
-                            <option value="LOW">Baja</option>
-                            <option value="MEDIUM">Media</option>
-                            <option value="HIGH">Alta</option>
-                        </select>
-
-                        <select id="search-category" style="display: none;"></select>
-
-                        <select id="search-completed" style="display: none;">
-                            <option value="true">Completadas</option>
-                            <option value="false">Pendientes</option>
-                        </select>
+                    <div class="stat-box stat-overdue">
+                        <span class="stat-label">Vencidas</span>
+                        <span id="gstat-overdue" class="stat-number">0</span>
                     </div>
                 </div>
-                <div class="form-actions mt-2">
-                    <button type="button" id="btn-buscar" class="btn btn-primary">Ejecutar Filtro</button>
-                </div>
-            </section>
 
-            <section class="tasks-section mt-4">
-                <div class="tasks-header">
-                    <h3>Resultados</h3>
-                    <button id="btn-recargar" class="btn btn-secondary">Limpiar Filtros</button>
+                <h4 class="h6 mt-4">Todas las tareas del sistema</h4>
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover align-middle" aria-label="Tareas globales">
+                        <thead class="table-dark">
+                        <tr>
+                            <th scope="col">ID</th>
+                            <th scope="col">Título</th>
+                            <th scope="col">Autor</th>
+                            <th scope="col">Categoría</th>
+                            <th scope="col">Prioridad</th>
+                            <th scope="col">Estado</th>
+                            <th scope="col">Deadline</th>
+                        </tr>
+                        </thead>
+                        <tbody id="tabla-tareas-globales"></tbody>
+                    </table>
                 </div>
-                <ul id="lista-tareas" class="task-list" aria-label="Lista de tareas"></ul>
-            </section>
-        </main>
+            </div>
+        </section>
+    </div>
+
+    <div id="tasks-panel" class="container-fluid px-4 pb-5" style="max-width: 1400px;">
+        <div class="row g-4">
+            <aside class="col-12 col-md-4 col-lg-3">
+                <section class="card shadow-sm mb-4">
+                    <div class="card-body">
+                        <h3 class="h5 border-bottom pb-2 mb-3">Resumen</h3>
+                        <div class="stats-grid" aria-label="Estadísticas de tareas">
+                            <div class="stat-box stat-total">
+                                <span class="stat-label">Totales</span>
+                                <span id="stat-total" class="stat-number">0</span>
+                            </div>
+                            <div class="stat-box stat-completed">
+                                <span class="stat-label">Completadas</span>
+                                <span id="stat-completed" class="stat-number">0</span>
+                            </div>
+                            <div class="stat-box stat-pending">
+                                <span class="stat-label">Pendientes</span>
+                                <span id="stat-pending" class="stat-number">0</span>
+                            </div>
+                            <div class="stat-box stat-overdue">
+                                <span class="stat-label">Vencidas</span>
+                                <span id="stat-overdue" class="stat-number">0</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="card shadow-sm mb-4">
+                    <div class="card-body">
+                        <h3 class="h6">Añadir Categoría</h3>
+                        <form id="form-nueva-categoria" class="d-flex gap-2" novalidate>
+                            <input type="text" id="nueva-cat-titulo" class="form-control form-control-sm" placeholder="Nueva..." required>
+                            <button type="submit" class="btn btn-primary btn-sm">+</button>
+                        </form>
+                    </div>
+                </section>
+
+                <section class="card shadow-sm">
+                    <div class="card-body">
+                        <h3 class="h6">Mis Tags</h3>
+                        <form id="form-nuevo-tag" class="d-flex gap-2 mb-3" novalidate>
+                            <input type="text" id="nuevo-tag-nombre" class="form-control form-control-sm" placeholder="Tag (sin #)" required>
+                            <button type="submit" class="btn btn-success btn-sm">+</button>
+                        </form>
+                        <div id="tags-container" class="d-flex flex-wrap gap-1"></div>
+                    </div>
+                </section>
+            </aside>
+
+            <main class="col-12 col-md-8 col-lg-9">
+                <section class="card shadow-sm mb-4">
+                    <div class="card-body">
+                        <h3 class="h5 border-bottom pb-2 mb-3">Crear Nueva Tarea</h3>
+                        <form id="form-tarea" novalidate>
+                            <div class="row g-3">
+                                <div class="col-12 col-md-6">
+                                    <label for="titulo" class="form-label fw-bold">Título <span class="text-danger">*</span></label>
+                                    <input type="text" id="titulo" class="form-control" required placeholder="¿Qué hay que hacer?">
+                                    <div class="text-danger small mt-1" id="error-titulo" style="display: none;">El título es obligatorio.</div>
+                                </div>
+                                <div class="col-12 col-md-6">
+                                    <label for="fecha-limite" class="form-label fw-bold">Fecha límite</label>
+                                    <input type="datetime-local" id="fecha-limite" class="form-control">
+                                </div>
+                                <div class="col-12">
+                                    <label for="descripcion" class="form-label fw-bold">Descripción</label>
+                                    <textarea id="descripcion" class="form-control" rows="2" placeholder="Detalles adicionales..."></textarea>
+                                </div>
+                                <div class="col-12 col-md-6">
+                                    <label for="prioridad" class="form-label fw-bold">Prioridad</label>
+                                    <select id="prioridad" class="form-select">
+                                        <option value="LOW">Baja</option>
+                                        <option value="MEDIUM" selected>Media</option>
+                                        <option value="HIGH">Alta</option>
+                                    </select>
+                                </div>
+                                <div class="col-12 col-md-6">
+                                    <label for="categoria" class="form-label fw-bold">Categoría</label>
+                                    <select id="categoria" class="form-select">
+                                        <option value="">Sin categoría</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="mt-3 text-end">
+                                <button type="submit" class="btn btn-success fw-bold" id="btn-crear">Guardar Tarea</button>
+                            </div>
+                        </form>
+                    </div>
+                </section>
+
+                <section class="card shadow-sm mb-4 bg-light border-0">
+                    <div class="card-body">
+                        <h3 class="h6 mb-3">Buscador Inteligente</h3>
+                        <div class="row g-2 align-items-end">
+                            <div class="col-12 col-md-4">
+                                <label for="search-type" class="form-label small">Filtrar por</label>
+                                <select id="search-type" class="form-select form-select-sm">
+                                    <option value="all">Todas las tareas</option>
+                                    <option value="title">Título...</option>
+                                    <option value="description">Descripción...</option>
+                                    <option value="priority">Prioridad</option>
+                                    <option value="category">Categoría</option>
+                                    <option value="tags">Tags asociados</option>
+                                    <option value="completed">Estado</option>
+                                    <option value="overdue">Vencidas</option>
+                                </select>
+                            </div>
+                            <div class="col-12 col-md-6" id="search-input-container" style="display: none;">
+                                <label id="search-param-label" for="search-query" class="form-label small">Criterio</label>
+                                <input type="text" id="search-query" class="form-control form-control-sm" placeholder="Buscar...">
+                                <select id="search-priority" class="form-select form-select-sm" style="display: none;">
+                                    <option value="LOW">Baja</option>
+                                    <option value="MEDIUM">Media</option>
+                                    <option value="HIGH">Alta</option>
+                                </select>
+                                <select id="search-category" class="form-select form-select-sm" style="display: none;"></select>
+                                <select id="search-tag" class="form-select form-select-sm" style="display: none;"></select>
+                                <select id="search-completed" class="form-select form-select-sm" style="display: none;">
+                                    <option value="true">Completadas</option>
+                                    <option value="false">Pendientes</option>
+                                </select>
+                            </div>
+                            <div class="col-12 col-md-2 text-md-end mt-2 mt-md-0">
+                                <button type="button" id="btn-buscar" class="btn btn-primary btn-sm w-100">Filtrar</button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="card shadow-sm">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-3">
+                            <h3 class="h5 mb-0">Resultados</h3>
+                            <button id="btn-recargar" class="btn btn-outline-secondary btn-sm">Limpiar Filtros</button>
+                        </div>
+                        <ul id="lista-tareas" class="list-group list-group-flush" aria-label="Lista de tareas"></ul>
+                    </div>
+                </section>
+            </main>
+        </div>
     </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script src="app.js"></script>
 </body>
 </html>

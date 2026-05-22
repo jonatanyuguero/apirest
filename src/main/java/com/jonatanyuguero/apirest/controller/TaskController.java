@@ -214,4 +214,26 @@ public class TaskController {
     public DashboardDto dashboard(@AuthenticationPrincipal User author) {
         return taskService.dashboard(author);
     }
+
+    // === Supervisión global (GESTOR/ADMIN) ===
+
+    @Operation(summary = "Listar TODAS las tareas del sistema (GESTOR/ADMIN)",
+            description = "Devuelve todas las tareas de todos los usuarios. Solo accesible a roles supervisores (GESTOR o ADMIN).")
+    @ApiResponse(responseCode = "200", description = "Listado global de tareas",
+            content = @Content(mediaType = "application/json",
+                    array = @ArraySchema(schema = @Schema(implementation = GetTaskDto.class))))
+    @PreAuthorize("hasAnyRole('ADMIN','GESTOR')")
+    @GetMapping("/all")
+    public List<GetTaskDto> getAllGlobal() {
+        return taskService.findAllGlobal().stream().map(GetTaskDto::of).toList();
+    }
+
+    @Operation(summary = "Dashboard global del sistema (GESTOR/ADMIN)",
+            description = "Devuelve estadísticas agregadas sobre TODAS las tareas del sistema (todos los usuarios). Solo accesible a roles supervisores.")
+    @ApiResponse(responseCode = "200", description = "Estadísticas globales calculadas")
+    @PreAuthorize("hasAnyRole('ADMIN','GESTOR')")
+    @GetMapping("/dashboard/global")
+    public DashboardDto dashboardGlobal() {
+        return taskService.dashboardGlobal();
+    }
 }

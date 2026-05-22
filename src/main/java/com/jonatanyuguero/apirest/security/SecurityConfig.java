@@ -39,8 +39,9 @@ public class SecurityConfig {
                         .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
                         // Consola H2 (sólo para desarrollo)
                         .requestMatchers("/h2-console/**").permitAll()
-                        // Registro público
+                        // Registro y recuperación de contraseña: públicos
                         .requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
+
 
                         // Reglas de roles (las anotaciones @PreAuthorize de los controllers
                         // ya cubren la granularidad; aquí cerramos el resto del API).
