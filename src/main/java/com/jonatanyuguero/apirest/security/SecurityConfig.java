@@ -28,23 +28,17 @@ public class SecurityConfig {
         http
                 .cors(Customizer.withDefaults())
                 .httpBasic(Customizer.withDefaults())
-                // Stateless: la API no usa sesión, en cada petición se valida el usuario
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .exceptionHandling(except -> {
                     except.authenticationEntryPoint(customAuthenticationEntryPoint);
                     except.accessDeniedHandler(customAccesDeniedHandler);
                 })
                 .authorizeHttpRequests(auth -> auth
-                        // Documentación pública
+                        .requestMatchers("/", "/index.html", "/styles.css", "/app.js", "/*.js", "/*.css", "/*.html", "/static/**").permitAll()
                         .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
-                        // Consola H2 (sólo para desarrollo)
                         .requestMatchers("/h2-console/**").permitAll()
-                        // Registro y recuperación de contraseña: públicos
                         .requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
 
-
-                        // Reglas de roles (las anotaciones @PreAuthorize de los controllers
-                        // ya cubren la granularidad; aquí cerramos el resto del API).
                         .requestMatchers("/users/**").authenticated()
                         .requestMatchers("/categories/**").authenticated()
                         .requestMatchers("/tags/**").authenticated()
