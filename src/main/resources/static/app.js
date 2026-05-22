@@ -1,4 +1,4 @@
-const API_URL = "http://localhost:8080";
+const API_URL = "";
 let authHeader = null;
 let usuarioActual = null;
 let tagsDisponiblesLista = [];
